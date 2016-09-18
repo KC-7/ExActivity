@@ -1,4 +1,8 @@
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
+
 import javax.swing.ImageIcon;
 
 import net.kc7.activityframe.Activity;
@@ -18,6 +22,7 @@ public class ExPanel extends Activity {
 	private final int y[] = new int[PIXEL_COUNT];
 	
 	private int dots, apple_x, apple_y;
+	private Image apple, head, dot;
 	
 	private final static String PATH_IMG = "res/img/";
 	
@@ -27,9 +32,9 @@ public class ExPanel extends Activity {
 	
 	@Override
 	protected boolean loadResources() {
-		Image apple = new ImageIcon(PATH_IMG + "apple.png").getImage();
-		Image head = new ImageIcon(PATH_IMG + "head.png").getImage();
-		Image dot = new ImageIcon(PATH_IMG + "dot.png").getImage();
+		apple = new ImageIcon(PATH_IMG + "apple.png").getImage();
+		head = new ImageIcon(PATH_IMG + "head.png").getImage();
+		dot = new ImageIcon(PATH_IMG + "dot.png").getImage();
 		
 		return super.loadResources();
 	}
@@ -55,6 +60,30 @@ public class ExPanel extends Activity {
 		r = (int) (Math.random() * PIXEL_RANDOM);
 		apple_y = ((r * PIXEL_SIZE));	
 		
+	}
+	
+	@Override
+	protected boolean drawView(Graphics g) {
+		
+		g.drawImage(apple, apple_x, apple_y, this);
+		g.setColor(Color.YELLOW);
+  		g.drawString("Score: " + dots, 5, 15);
+        
+        for (int z = 0; z < dots; z++) {
+           if (z == 0) g.drawImage(head, x[z], y[z], this);
+           else g.drawImage(dot, x[z], y[z], this);
+        }
+     
+        Toolkit.getDefaultToolkit().sync();
+        
+		return super.drawView(g);
+	}
+	
+	@Override
+	protected boolean drawVoid(Graphics g) {
+		
+		
+		return super.drawVoid(g);
 	}
 	
 }
