@@ -1,35 +1,38 @@
+package com.github.kc_7.snakeplus;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-
 import javax.swing.ImageIcon;
 
-import net.kc7.activityframe.Activity;
+import com.github.kc_7.activityplus.Activity;
 
-public class ExPanel extends Activity {
+public class SnakeActivity extends Activity {
 
 	private static final long serialVersionUID = 1L;
-
-	private final static int ACTIVITY_WIDTH = 300;
-	private final static int ACTIVITY_HEIGHT = 300;
-	private final static int ACTIVITY_FRAMERATE = 100;
-	private final static String PATH_IMG = "res/img/";
-
-	private final static int PIXEL_COUNT = 900;
-	private final static int x[] = new int[PIXEL_COUNT];
-	private final static int y[] = new int[PIXEL_COUNT];
-
-	private final int PIXEL_SIZE = 10;
-	private final int PIXEL_RANDOM = 29;
+	
+	private static final int PIXEL_COUNT = 900;
+	private static final int DIRECTION_UP = 0, DIRECTION_DOWN = 1, DIRECTION_LEFT = 2, DIRECTION_RIGHT = 3;
+	private static final int x[] = new int[PIXEL_COUNT], y[] = new int[PIXEL_COUNT];
+	
+	private final String PATH_IMG = "res/img/";
+	private final Font standard = new Font("Serif", Font.PLAIN, 12);
+	private final int PIXEL_SIZE = 10, PIXEL_RANDOM = 29, INITIAL_DOTS = 3;
 
 	private int dots, apple_x, apple_y, direction;
 	private Image apple, head, dot;
+	
+	static {
+		PULSE_RATE = 125;
+		WIDTH = 300;
+		HEIGHT = 300;
+	}
 
-	public ExPanel() {
-		super(ACTIVITY_WIDTH, ACTIVITY_HEIGHT, ACTIVITY_FRAMERATE);
+	public SnakeActivity() {
+		super();
 		setBackground(Color.BLACK);
 	}
 
@@ -44,8 +47,8 @@ public class ExPanel extends Activity {
 	@Override
 	protected void startActivity() {
 
-		dots = 4;
-		direction = 1;
+		dots = INITIAL_DOTS;
+		direction = DIRECTION_RIGHT;
 
 		for (int z = 0; z < 1; z++) {
 			x[z] = 150 - z * PIXEL_SIZE;
@@ -58,11 +61,10 @@ public class ExPanel extends Activity {
 	}
 
 	@Override
-	protected void processInfo() {
-
+	protected void pulseProcessor() {
+		move();
 		checkApple();
 		checkCollision();
-		move();
 	}
 
 	private void locateApple() {
@@ -92,7 +94,7 @@ public class ExPanel extends Activity {
 		}
 
 		// Right/down borders
-		if (y[0] >= ACTIVITY_HEIGHT || x[0] >= ACTIVITY_WIDTH) {
+		if (y[0] >= HEIGHT || x[0] >= WIDTH) {
 			active = false;
 		}
 
@@ -113,30 +115,25 @@ public class ExPanel extends Activity {
 			x[z] = x[(z - 1)];
 			y[z] = y[(z - 1)];
 		}
-
-		// Left
-		if (direction == 0) {
-			x[0] -= PIXEL_SIZE;
-		}
-
-		// Right
-		if (direction == 1) {
-			x[0] += PIXEL_SIZE;
-		}
-
-		// Up
-		if (direction == 2) {
-			y[0] -= PIXEL_SIZE;
-		}
-
-		// Down
-		if (direction == 3) {
-			y[0] += PIXEL_SIZE;
+		
+		switch(direction) {
+			case DIRECTION_LEFT:
+				x[0] -= PIXEL_SIZE;
+				break;
+			case DIRECTION_RIGHT:
+				x[0] += PIXEL_SIZE;
+				break;
+			case DIRECTION_UP:
+				y[0] -= PIXEL_SIZE;
+				break;
+			case DIRECTION_DOWN:
+				y[0] += PIXEL_SIZE;
+				break;
 		}
 	}
 
 	@Override
-	protected void drawView(Graphics g) {
+	protected void drawActive(Graphics g) {
 
 		g.drawImage(apple, apple_x, apple_y, this);
 		g.setColor(Color.YELLOW);
@@ -151,33 +148,35 @@ public class ExPanel extends Activity {
 	}
 
 	@Override
-	protected void drawVoid(Graphics g) {
-
-		Font regular = new Font("Helvetica", Font.PLAIN, 14);
-		Font bold = new Font("Helvetica", Font.BOLD, 14);
+	protected void drawInactive(Graphics g) {
 
 		String msg = "Game Over";
-		FontMetrics metr = getFontMetrics(bold);
+		FontMetrics metr = getFontMetrics(standard);
 		g.setColor(Color.WHITE);
-		g.setFont(bold);
-		g.drawString(msg, (ACTIVITY_WIDTH - metr.stringWidth(msg)) / 2, ACTIVITY_HEIGHT / 2);
+		g.drawString(msg, (WIDTH - metr.stringWidth(msg)) / 2, HEIGHT / 2);
 
 		g.setColor(Color.YELLOW);
-		g.setFont(regular);
 		g.drawString("Score: " + dots, 5, 15);
 	}
 
 	@Override
 	protected void handleKey(int key) {
 		
-		if ((key == UP) && (direction != 3)) {
-			direction = 2;
-		} else if ((key == DOWN) && (direction != 2)) {
-			direction = 3;
-		} else if ((key == LEFT) && (direction != 1)) {
-			direction = 0;
-		} else if ((key == RIGHT) && (direction != 0)) {
-			direction = 1;
+		if ((key == UP) && (direction != DIRECTION_DOWN)) {
+			
+			direction = DIRECTION_UP;
+			
+		} else if ((key == DOWN) && (direction != DIRECTION_UP)) {
+			
+			direction = DIRECTION_DOWN;
+			
+		} else if ((key == LEFT) && (direction != DIRECTION_RIGHT)) {
+			
+			direction = DIRECTION_LEFT;
+			
+		} else if ((key == RIGHT) && (direction != DIRECTION_LEFT)) {
+			
+			direction = DIRECTION_RIGHT;
 		}
 	}
 
