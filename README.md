@@ -1,2 +1,2 @@
-# ExActivity
-Example Activity for the ActivityFrame
+# SnakePlus
+SnakePlus and SnakeActivity
