@@ -27,12 +27,12 @@ public class SnakeActivity extends Activity {
 	
 	static {
 		PULSE_RATE = 125;
+		PULSE_DELAY = 0;
 		WIDTH = 300;
 		HEIGHT = 300;
 	}
 
 	public SnakeActivity() {
-		super();
 		setBackground(Color.BLACK);
 	}
 
@@ -45,7 +45,7 @@ public class SnakeActivity extends Activity {
 	}
 
 	@Override
-	protected void startActivity() {
+	protected void start() {
 
 		dots = INITIAL_DOTS;
 		direction = DIRECTION_RIGHT;
@@ -56,8 +56,6 @@ public class SnakeActivity extends Activity {
 		}
 
 		locateApple();
-
-		super.startActivity();
 	}
 
 	@Override
@@ -102,11 +100,6 @@ public class SnakeActivity extends Activity {
 		if (y[0] < 0 || x[0] < 0) {
 			active = false;
 		}
-
-		// If inactive, stop the timer
-		if(!active) {
-			timer.stop();
-		}
 	}
 
 	private void move() {
@@ -140,8 +133,11 @@ public class SnakeActivity extends Activity {
 		g.drawString("Score: " + dots, 5, 15);
 
 		for (int z = 0; z < dots; z++) {
-			if (z == 0) g.drawImage(head, x[z], y[z], this);
-			else g.drawImage(dot, x[z], y[z], this);
+			if (z == 0) {
+				g.drawImage(head, x[z], y[z], this);
+			} else {
+				g.drawImage(dot, x[z], y[z], this);
+			}
 		}
 
 		Toolkit.getDefaultToolkit().sync();
@@ -154,27 +150,24 @@ public class SnakeActivity extends Activity {
 		FontMetrics metr = getFontMetrics(standard);
 		g.setColor(Color.WHITE);
 		g.drawString(msg, (WIDTH - metr.stringWidth(msg)) / 2, HEIGHT / 2);
-
-		g.setColor(Color.YELLOW);
-		g.drawString("Score: " + dots, 5, 15);
 	}
 
 	@Override
 	protected void handleKey(int key) {
 		
-		if ((key == UP) && (direction != DIRECTION_DOWN)) {
+		if ((key == KEY_UP) && (direction != DIRECTION_DOWN)) {
 			
 			direction = DIRECTION_UP;
 			
-		} else if ((key == DOWN) && (direction != DIRECTION_UP)) {
+		} else if ((key == KEY_DOWN) && (direction != DIRECTION_UP)) {
 			
 			direction = DIRECTION_DOWN;
 			
-		} else if ((key == LEFT) && (direction != DIRECTION_RIGHT)) {
+		} else if ((key == KEY_LEFT) && (direction != DIRECTION_RIGHT)) {
 			
 			direction = DIRECTION_LEFT;
 			
-		} else if ((key == RIGHT) && (direction != DIRECTION_LEFT)) {
+		} else if ((key == KEY_RIGHT) && (direction != DIRECTION_LEFT)) {
 			
 			direction = DIRECTION_RIGHT;
 		}
