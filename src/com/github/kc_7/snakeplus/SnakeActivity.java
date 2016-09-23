@@ -6,6 +6,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.util.Set;
+
 import javax.swing.ImageIcon;
 
 import com.github.kc_7.activityplus.Activity;
@@ -13,31 +16,28 @@ import com.github.kc_7.activityplus.Activity;
 public class SnakeActivity extends Activity {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final int PIXEL_COUNT = 900;
 	private static final int DIRECTION_UP = 0, DIRECTION_DOWN = 1, DIRECTION_LEFT = 2, DIRECTION_RIGHT = 3;
 	private static final int x[] = new int[PIXEL_COUNT], y[] = new int[PIXEL_COUNT];
-	
+
 	private final String PATH_IMG = "res/img/";
 	private final Font standard = new Font("Serif", Font.PLAIN, 12);
 	private final int PIXEL_SIZE = 10, PIXEL_RANDOM = 29, INITIAL_DOTS = 3;
 
 	private int dots, apple_x, apple_y, direction;
 	private Image apple, head, dot;
-	
+
 	static {
 		PULSE_RATE = 125;
-		PULSE_DELAY = 0;
+		PULSE_DELAY = 0000;
 		WIDTH = 300;
 		HEIGHT = 300;
-	}
-
-	public SnakeActivity() {
-		setBackground(Color.BLACK);
+		COLOR = Color.BLACK;
 	}
 
 	@Override
-	protected void loadResources() {
+	protected void load() {
 
 		apple = new ImageIcon(PATH_IMG + "apple.png").getImage();
 		head = new ImageIcon(PATH_IMG + "head.png").getImage();
@@ -48,7 +48,9 @@ public class SnakeActivity extends Activity {
 	protected void start() {
 
 		dots = INITIAL_DOTS;
-		direction = DIRECTION_RIGHT;
+		double r = Math.random();
+		if (r < 0.5) direction = DIRECTION_RIGHT;
+		else direction = DIRECTION_LEFT;
 
 		for (int z = 0; z < 1; z++) {
 			x[z] = 150 - z * PIXEL_SIZE;
@@ -57,12 +59,18 @@ public class SnakeActivity extends Activity {
 
 		locateApple();
 	}
+	
+	@Override
+	protected void stop() {
+		return;
+	}
 
 	@Override
 	protected void pulseProcessor() {
-		move();
-		checkApple();
+		
+		checkApple(false);
 		checkCollision();
+		move();
 	}
 
 	private void locateApple() {
@@ -74,11 +82,13 @@ public class SnakeActivity extends Activity {
 		apple_y = ((r * PIXEL_SIZE));	
 	}
 
-	private void checkApple() {
-
-		if ((x[0] == apple_x) && (y[0] == apple_y)) {
+	private void checkApple(boolean b) {
+		boolean snakeApple = (x[0] == apple_x) && (y[0] == apple_y);
+		if (b || snakeApple) {
 			dots++;
-			locateApple();
+			if (snakeApple) {
+				locateApple();
+			}
 		}
 	}
 
@@ -108,20 +118,20 @@ public class SnakeActivity extends Activity {
 			x[z] = x[(z - 1)];
 			y[z] = y[(z - 1)];
 		}
-		
+
 		switch(direction) {
-			case DIRECTION_LEFT:
-				x[0] -= PIXEL_SIZE;
-				break;
-			case DIRECTION_RIGHT:
-				x[0] += PIXEL_SIZE;
-				break;
-			case DIRECTION_UP:
-				y[0] -= PIXEL_SIZE;
-				break;
-			case DIRECTION_DOWN:
-				y[0] += PIXEL_SIZE;
-				break;
+		case DIRECTION_LEFT:
+			x[0] -= PIXEL_SIZE;
+			break;
+		case DIRECTION_RIGHT:
+			x[0] += PIXEL_SIZE;
+			break;
+		case DIRECTION_UP:
+			y[0] -= PIXEL_SIZE;
+			break;
+		case DIRECTION_DOWN:
+			y[0] += PIXEL_SIZE;
+			break;
 		}
 	}
 
@@ -153,23 +163,52 @@ public class SnakeActivity extends Activity {
 	}
 
 	@Override
-	protected void handleKey(int key) {
+	protected void handleKey(Set<Integer> pressedKeys) {
 		
-		if ((key == KEY_UP) && (direction != DIRECTION_DOWN)) {
+		if (active) {
 			
+			keyDirection(pressedKeys);
+			
+			if (keyDebug(pressedKeys)) {
+				keyScore(pressedKeys);
+			}
+		} else {
+			
+			keyRestart(pressedKeys);
+		}
+	}
+	
+	private void keyDirection(Set<Integer> pressedKeys) {
+		
+		if (pressedKeys.contains(KeyEvent.VK_UP) && direction != DIRECTION_DOWN) {
 			direction = DIRECTION_UP;
 			
-		} else if ((key == KEY_DOWN) && (direction != DIRECTION_UP)) {
-			
+		} else if (pressedKeys.contains(KeyEvent.VK_DOWN) && direction != DIRECTION_UP) {
 			direction = DIRECTION_DOWN;
 			
-		} else if ((key == KEY_LEFT) && (direction != DIRECTION_RIGHT)) {
-			
+		} else if (pressedKeys.contains(KeyEvent.VK_LEFT) && direction != DIRECTION_RIGHT) {
 			direction = DIRECTION_LEFT;
 			
-		} else if ((key == KEY_RIGHT) && (direction != DIRECTION_LEFT)) {
-			
+		} else if (pressedKeys.contains(KeyEvent.VK_RIGHT) && direction != DIRECTION_LEFT) {
 			direction = DIRECTION_RIGHT;
+		}
+	}
+	
+	private void keyRestart(Set<Integer> pressedKeys) {
+		
+		if (pressedKeys.contains(KeyEvent.VK_SPACE) && !active) {
+			
+			activate();
+		}
+	}
+	
+	private boolean keyDebug(Set<Integer> pressedKeys) {
+		return pressedKeys.contains(KeyEvent.VK_SHIFT);
+	}
+
+	private void keyScore(Set<Integer> pressedKeys) {
+		if (pressedKeys.contains(KeyEvent.VK_A)) {
+			checkApple(true);
 		}
 	}
 
