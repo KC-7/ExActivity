@@ -30,7 +30,7 @@ public class SnakeActivity extends Activity {
 
 	static {
 		PULSE_RATE = 125;
-		PULSE_DELAY = 0000;
+		PULSE_DELAY = 1000;
 		WIDTH = 300;
 		HEIGHT = 300;
 		COLOR = Color.BLACK;
@@ -51,12 +51,12 @@ public class SnakeActivity extends Activity {
 		double r = Math.random();
 		if (r < 0.5) direction = DIRECTION_RIGHT;
 		else direction = DIRECTION_LEFT;
-
+		
 		for (int z = 0; z < 1; z++) {
 			x[z] = 150 - z * PIXEL_SIZE;
 			y[z] = 150;
 		}
-
+		
 		locateApple();
 	}
 	
@@ -93,22 +93,26 @@ public class SnakeActivity extends Activity {
 	}
 
 	private void checkCollision() {
-
+		boolean collision =  false;
 		// Self-collision
 		for (int z = dots; z > 0; z--) {
 			if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
-				active = false;
+				collision = true;
 			}
 		}
 
 		// Right/down borders
 		if (y[0] >= HEIGHT || x[0] >= WIDTH) {
-			active = false;
+			collision = true;
 		}
 
 		// Left/up borders
 		if (y[0] < 0 || x[0] < 0) {
-			active = false;
+			collision = true;
+		}
+		
+		if (collision) {
+			deactivate();
 		}
 	}
 
