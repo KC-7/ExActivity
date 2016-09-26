@@ -17,13 +17,13 @@ public class SnakeActivity extends Activity {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int PIXEL_COUNT = 900;
+	private static final int DOT_COUNT = 900;
 	private static final int DIRECTION_UP = 0, DIRECTION_DOWN = 1, DIRECTION_LEFT = 2, DIRECTION_RIGHT = 3;
-	private static final int x[] = new int[PIXEL_COUNT], y[] = new int[PIXEL_COUNT];
+	private static final int x[] = new int[DOT_COUNT], y[] = new int[DOT_COUNT];
 
 	private final String PATH_IMG = "res/img/";
 	private final Font standard = new Font("Serif", Font.PLAIN, 12);
-	private final int PIXEL_SIZE = 10, PIXEL_RANDOM = 29, INITIAL_DOTS = 3;
+	private final int DOT_SIZE = 10, DOT_RANDOM = 29, INITIAL_DOTS = 3;
 
 	private int dots, apple_x, apple_y, direction;
 	private Image apple, head, dot;
@@ -49,11 +49,14 @@ public class SnakeActivity extends Activity {
 
 		dots = INITIAL_DOTS;
 		double r = Math.random();
-		if (r < 0.5) direction = DIRECTION_RIGHT;
-		else direction = DIRECTION_LEFT;
+		if (r < 0.5) {
+			direction = DIRECTION_RIGHT;
+		} else {
+			direction = DIRECTION_LEFT;
+		}
 		
 		for (int z = 0; z < 1; z++) {
-			x[z] = 150 - z * PIXEL_SIZE;
+			x[z] = 150 - z * DOT_SIZE;
 			y[z] = 150;
 		}
 		
@@ -75,13 +78,14 @@ public class SnakeActivity extends Activity {
 
 	private void locateApple() {
 
-		int r = (int) (Math.random() * PIXEL_RANDOM);
-		apple_x = ((r * PIXEL_SIZE));
+		int r = (int) (Math.random() * DOT_RANDOM);
+		apple_x = ((r * DOT_SIZE));
 
-		r = (int) (Math.random() * PIXEL_RANDOM);
-		apple_y = ((r * PIXEL_SIZE));	
+		r = (int) (Math.random() * DOT_RANDOM);
+		apple_y = ((r * DOT_SIZE));	
 	}
 
+	// Checks if the snake has hit apple or if overridden through parameter
 	private void checkApple(boolean b) {
 		boolean snakeApple = (x[0] == apple_x) && (y[0] == apple_y);
 		if (b || snakeApple) {
@@ -125,16 +129,16 @@ public class SnakeActivity extends Activity {
 
 		switch(direction) {
 		case DIRECTION_LEFT:
-			x[0] -= PIXEL_SIZE;
+			x[0] -= DOT_SIZE;
 			break;
 		case DIRECTION_RIGHT:
-			x[0] += PIXEL_SIZE;
+			x[0] += DOT_SIZE;
 			break;
 		case DIRECTION_UP:
-			y[0] -= PIXEL_SIZE;
+			y[0] -= DOT_SIZE;
 			break;
 		case DIRECTION_DOWN:
-			y[0] += PIXEL_SIZE;
+			y[0] += DOT_SIZE;
 			break;
 		}
 	}
