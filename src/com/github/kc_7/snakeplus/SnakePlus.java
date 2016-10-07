@@ -1,18 +1,23 @@
 package com.github.kc_7.snakeplus;
+
 import java.awt.EventQueue;
 
-import com.github.kc_7.activityplus.Activity;
 import com.github.kc_7.activityplus.ActivityPlus;
+import com.github.kc_7.activityplus.Launcher;
 
 public class SnakePlus extends ActivityPlus {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final String TITLE = "SnakePlus";
-	private static final Activity ACTIVITY = new SnakeActivity();
+	private static final String TITLE = "Snake";
+	private static final Launcher LAUNCHER = new SnakeLauncher();
 	
-	public SnakePlus(Activity activity, String title) {
-		super(activity, title);
+	static {
+		activity = new SnakeActivity();
+	}
+	
+	public SnakePlus(Launcher launcher, String title) {
+		super(launcher, title);
 	}
 	
 	public static void main(String[] args) {	
@@ -21,9 +26,8 @@ public class SnakePlus extends ActivityPlus {
 			
 			@Override
 			public void run() {             
-				new SnakePlus(ACTIVITY, TITLE);
+				new SnakePlus(LAUNCHER, TITLE);
 			}			
 		});
 	}
-
 }
