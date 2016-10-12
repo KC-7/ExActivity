@@ -21,7 +21,6 @@ public class SnakePlus extends ActivityPlus {
 	}
 	
 	public static void main(String[] args) {	
-		
 		EventQueue.invokeLater(new Runnable() {
 			
 			@Override

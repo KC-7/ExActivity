@@ -86,12 +86,13 @@ public class SnakeActivity extends Activity {
 
 	// Checks if the snake has hit apple or if overridden through parameter
 	private void checkApple(boolean override) {
-
 		final boolean snakeTouchingApple = (x[0] == apple_x) && (y[0] == apple_y);
-
+		
+		// Increases dots 
 		if (override || snakeTouchingApple) {
 			dots++;
-
+			
+			// If snake hit apple, relocate the apple
 			if (snakeTouchingApple) {
 				locateApple();
 			}
@@ -100,7 +101,6 @@ public class SnakeActivity extends Activity {
 	
 	// Checks snake collision with self or borders and deactivates
 	private void checkCollision() {
-
 		boolean collision =  false;
 
 		// Self-collision
@@ -127,31 +127,29 @@ public class SnakeActivity extends Activity {
 	
 	// Moves body and head
 	private void move() {
-
 		for (int z = dots; z > 0; z--) {
 			x[z] = x[(z - 1)];
 			y[z] = y[(z - 1)];
 		}
 
 		switch(direction) {
-		case DIRECTION_LEFT:
-			x[0] -= DOT_SIZE;
-			break;
-		case DIRECTION_RIGHT:
-			x[0] += DOT_SIZE;
-			break;
-		case DIRECTION_UP:
-			y[0] -= DOT_SIZE;
-			break;
-		case DIRECTION_DOWN:
-			y[0] += DOT_SIZE;
-			break;
+			case DIRECTION_LEFT:
+				x[0] -= DOT_SIZE;
+				break;
+			case DIRECTION_RIGHT:
+				x[0] += DOT_SIZE;
+				break;
+			case DIRECTION_UP:
+				y[0] -= DOT_SIZE;
+				break;
+			case DIRECTION_DOWN:
+				y[0] += DOT_SIZE;
+				break;
 		}
 	}
 
 	@Override
 	protected void drawActive(Graphics g) {
-
 		for (int z = 0; z < dots; z++) {
 			if (z == 0) {
 				g.drawImage(head, x[z], y[z], this);
@@ -169,7 +167,6 @@ public class SnakeActivity extends Activity {
 
 	@Override
 	protected void drawInactive(Graphics g) {
-
 		final FontMetrics metr = getFontMetrics(g.getFont());
 		final String msg = "Game Over";
 		
@@ -179,25 +176,19 @@ public class SnakeActivity extends Activity {
 
 	@Override
 	protected void handleKey(Set<Integer> pressedKeys) {
-
 		if (active) {
-
 			keyDirection(pressedKeys);
 
 			if (keyDebug(pressedKeys)) {
-
 				keyScore(pressedKeys);
 				keyApple(pressedKeys);
 			}
-
 		} else {
-
 			keyRestart(pressedKeys);	
 		}
 	}
 
 	private void keyDirection(Set<Integer> pressedKeys) {
-
 		if (pressedKeys.contains(KeyEvent.VK_UP) && direction != DIRECTION_DOWN) {
 			direction = DIRECTION_UP;
 

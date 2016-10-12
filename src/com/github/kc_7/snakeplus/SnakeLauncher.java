@@ -22,7 +22,6 @@ public class SnakeLauncher extends Launcher {
 
 	@Override
 	protected void handleKey(Set<Integer> pressedKeys) {
-		
 		if (pressedKeys.contains(KeyEvent.VK_SPACE)) {
 			super.launch();
 		}
