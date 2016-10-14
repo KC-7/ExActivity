@@ -17,22 +17,42 @@ public class SnakeLauncher extends Launcher {
 	private static final Color COLOR = Color.BLACK;
 	
 	public SnakeLauncher() {
+		
 		super(WIDTH, HEIGHT, COLOR);
+		
 	}
 
 	@Override
 	protected void handleKey(Set<Integer> pressedKeys) {
+		
 		if (pressedKeys.contains(KeyEvent.VK_SPACE)) {
+			
 			super.launch();
+			
 		}
+		
 	}
 
 	@Override
 	protected void drawLauncher(Graphics g) {
+		
 		final FontMetrics metr = getFontMetrics(g.getFont());
 		final String msg = "Snake";
 
 		g.setColor(Color.GREEN);
 		g.drawString(msg, (WIDTH - metr.stringWidth(msg)) / 2, HEIGHT / 2);
+		
 	}
+	
+	@Override
+	protected void drawEnded(Graphics g) {
+		
+		final FontMetrics metr = getFontMetrics(g.getFont());
+		final String msg = "Game Over";
+		
+		g.setColor(Color.CYAN);
+		g.drawString(msg, (WIDTH - metr.stringWidth(msg)) / 2, HEIGHT / 2);
+		
+	}
+	
 }
