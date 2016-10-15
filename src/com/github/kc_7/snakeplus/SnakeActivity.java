@@ -72,7 +72,7 @@ public class SnakeActivity extends Activity {
 	@Override
 	protected void stop() {
 		
-		// TODO Write data
+		return;
 		
 	}
 
@@ -215,12 +215,30 @@ public class SnakeActivity extends Activity {
 	@Override
 	protected void handleKey(Set<Integer> pressedKeys) {
 		
+		keyPause(pressedKeys);
 		keyDirection(pressedKeys);
 
 		if (keyDebug(pressedKeys)) {
 			
 			keyScore(pressedKeys);
 			keyApple(pressedKeys);
+			
+		}
+		
+	}
+	
+	private void keyPause(Set<Integer> pressedKeys) {
+		
+		if (pressedKeys.contains(KeyEvent.VK_SPACE)) {
+			
+			if (timer.isRunning()) {
+			
+				suspend();
+			
+			} else {
+				
+				resume();
+			}
 			
 		}
 		
