@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -24,7 +25,6 @@ public class SnakeActivity extends Activity {
 	private static final int x[] = new int[DOT_COUNT];
 	private static final int y[] = new int[DOT_COUNT];	
 
-	private final String PATH_IMG = "res/img/";
 	private final int DIRECTION_UP = 0;
 	private final int DIRECTION_DOWN = 1;
 	private final int DIRECTION_LEFT = 2; 
@@ -32,7 +32,9 @@ public class SnakeActivity extends Activity {
 	
 	private final int DOT_SIZE = 10;
 	private final int INITIAL_DOTS = 4;
-
+	private final String PATH_IMG = "res/img/";
+	
+	private Set<Integer> keys = new HashSet<>();
 	private int dots, apple_x, apple_y, direction;
 	private Image apple, head, dot;
 
@@ -62,7 +64,7 @@ public class SnakeActivity extends Activity {
 
 		for (int z = 0; z < DOT_SIZE; z++) {
 			
-			x[z] = (direction == DIRECTION_RIGHT)  ? 150 - z * DOT_SIZE : 150 + z * DOT_SIZE;
+			x[z] = (direction == DIRECTION_RIGHT)  ? (150 - z * DOT_SIZE) : (150 + z * DOT_SIZE);
 			y[z] = 150;
 			
 		}
@@ -72,7 +74,8 @@ public class SnakeActivity extends Activity {
 	@Override
 	protected void stop() {
 		
-		return;
+		//write("data.txt", "highscore", dots);
+		//write("data.txt", "time", System.currentTimeMillis());
 		
 	}
 
@@ -213,27 +216,29 @@ public class SnakeActivity extends Activity {
 	}
 
 	@Override
-	protected void handleKey(Set<Integer> pressedKeys) {
+	protected void keyPress(Set<Integer> pressedKeys) {
 		
-		keyPause(pressedKeys);
-		keyDirection(pressedKeys);
+		keys = pressedKeys;
+		
+		keyPause();
+		keyDirection();
 
-		if (keyDebug(pressedKeys)) {
+		if (keyDebug()) {
 			
-			keyScore(pressedKeys);
-			keyApple(pressedKeys);
+			keyScore();
+			keyApple();
 			
 		}
 		
 	}
 	
-	private void keyPause(Set<Integer> pressedKeys) {
+	private void keyPause() {
 		
-		if (pressedKeys.contains(KeyEvent.VK_SPACE)) {
+		if (keys.contains(KeyEvent.VK_SPACE)) {
 			
 			if (timer.isRunning()) {
 			
-				suspend();
+				pause();
 			
 			} else {
 				
@@ -244,21 +249,21 @@ public class SnakeActivity extends Activity {
 		
 	}
 
-	private void keyDirection(Set<Integer> pressedKeys) {
+	private void keyDirection() {
 		
-		if (pressedKeys.contains(KeyEvent.VK_UP) && direction != DIRECTION_DOWN) {
+		if (keys.contains(KeyEvent.VK_UP) && direction != DIRECTION_DOWN) {
 			
 			direction = DIRECTION_UP;
 
-		} else if (pressedKeys.contains(KeyEvent.VK_DOWN) && direction != DIRECTION_UP) {
+		} else if (keys.contains(KeyEvent.VK_DOWN) && direction != DIRECTION_UP) {
 			
 			direction = DIRECTION_DOWN;
 
-		} else if (pressedKeys.contains(KeyEvent.VK_LEFT) && direction != DIRECTION_RIGHT) {
+		} else if (keys.contains(KeyEvent.VK_LEFT) && direction != DIRECTION_RIGHT) {
 			
 			direction = DIRECTION_LEFT;
 
-		} else if (pressedKeys.contains(KeyEvent.VK_RIGHT) && direction != DIRECTION_LEFT) {
+		} else if (keys.contains(KeyEvent.VK_RIGHT) && direction != DIRECTION_LEFT) {
 			
 			direction = DIRECTION_RIGHT;
 		}
@@ -266,15 +271,15 @@ public class SnakeActivity extends Activity {
 	}
 
 
-	private boolean keyDebug(Set<Integer> pressedKeys) {
+	private boolean keyDebug() {
 		
-		return pressedKeys.contains(KeyEvent.VK_SHIFT);
+		return keys.contains(KeyEvent.VK_SHIFT);
 		
 	}
 
-	private void keyScore(Set<Integer> pressedKeys) {
+	private void keyScore() {
 		
-		if (pressedKeys.contains(KeyEvent.VK_A)) {
+		if (keys.contains(KeyEvent.VK_A)) {
 			
 			checkApple(true);
 			
@@ -282,9 +287,9 @@ public class SnakeActivity extends Activity {
 		
 	}
 
-	private void keyApple(Set<Integer> pressedKeys) {
+	private void keyApple() {
 		
-		if (pressedKeys.contains(KeyEvent.VK_S)) {
+		if (keys.contains(KeyEvent.VK_S)) {
 			
 			locateApple();
 			
