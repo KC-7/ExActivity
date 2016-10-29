@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -34,7 +33,6 @@ public class SnakeActivity extends Activity {
 	private final int INITIAL_DOTS = 4;
 	private final String PATH_IMG = "res/img/";
 	
-	private Set<Integer> keys = new HashSet<>();
 	private int dots, apple_x, apple_y, direction;
 	private Image apple, head, dot;
 
@@ -218,8 +216,6 @@ public class SnakeActivity extends Activity {
 	@Override
 	protected void keyPress(Set<Integer> pressedKeys) {
 		
-		keys = pressedKeys;
-		
 		keyPause();
 		keyDirection();
 
@@ -236,7 +232,7 @@ public class SnakeActivity extends Activity {
 		
 		if (keys.contains(KeyEvent.VK_SPACE)) {
 			
-			if (timer.isRunning()) {
+			if (isActive()) {
 			
 				pause();
 			

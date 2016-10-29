@@ -37,7 +37,7 @@ public class SnakeLauncher extends Launcher {
 	protected void drawLauncher(Graphics g) {
 		
 		final FontMetrics metr = getFontMetrics(g.getFont());
-		final String msg = "Snake";
+		final String msg = "Snake -- Press SPACE to begin";
 
 		g.setColor(Color.GREEN);
 		g.drawString(msg, (WIDTH - metr.stringWidth(msg)) / 2, HEIGHT / 2);
@@ -48,7 +48,7 @@ public class SnakeLauncher extends Launcher {
 	protected void drawEnded(Graphics g) {
 		
 		final FontMetrics metr = getFontMetrics(g.getFont());
-		final String msg = "Game Over";
+		final String msg = "Game Over -- Press SPACE to restart";
 		
 		g.setColor(Color.CYAN);
 		g.drawString(msg, (WIDTH - metr.stringWidth(msg)) / 2, HEIGHT / 2);
