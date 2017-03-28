@@ -1,4 +1,4 @@
-package com.github.kc_7.snakeplus;
+package prealpha;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.Set;
 
-import com.github.kc_7.activityplus.Launcher;
+import prealpha.Launcher;
 
 public class SnakeLauncher extends Launcher {
 
@@ -17,18 +17,15 @@ public class SnakeLauncher extends Launcher {
 	private static final Color COLOR = Color.BLACK;
 	
 	public SnakeLauncher() {
-		
 		super(WIDTH, HEIGHT, COLOR);
-		
 	}
 
 	@Override
 	protected void keyPress(Set<Integer> keys) {
 		
+		// If key list contains the space key, call Launcher's launch
 		if (keys.contains(KeyEvent.VK_SPACE)) {
-			
 			launch();
-			
 		}
 		
 	}
